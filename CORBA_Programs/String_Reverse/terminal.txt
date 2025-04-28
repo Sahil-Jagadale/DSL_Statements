@@ -20,3 +20,140 @@ Terminal 2 (Client):
 
 java ReverseClient -ORBInitialPort 1056 -ORBInitialHost localhost
 -------------------------------------------------------------------
+
+
+hat is CORBA?
+
+CORBA (Common Object Request Broker Architecture) is a standard defined by the Object Management Group (OMG) that enables software components written in different programming languages and running on different computers to work together.
+
+It is used for:
+
+Developing distributed applications.
+
+Enabling communication between client and server objects over a network.
+
+Object brokering: locating, activating, and communicating between objects.
+
+Why is this Program Written?
+
+This program demonstrates a simple CORBA-based distributed application for string reversing. The goal is to:
+
+Understand CORBA architecture.
+
+Showcase object brokering.
+
+Perform operations between two different machines (server and client).
+
+Program Working
+
+The program consists of three major parts:
+
+Server (ReverseServer.java) - Provides the service to reverse a string.
+
+Implementation (ReverseImpl.java) - Actual logic to reverse the string.
+
+Client (ReverseClient.java) - Requests the service from the server.
+
+They all communicate through CORBA.
+
+Step-by-Step Explanation
+
+ReverseServer.java
+
+Line 1-5: Import CORBA, naming service, and portable server classes.
+
+main():
+
+ORB.init(args, null) initializes the ORB.
+
+resolve_initial_references("RootPOA") fetches the POA (Portable Object Adapter) reference.
+
+activate() activates the POA Manager.
+
+ReverseImpl rvr = new ReverseImpl() creates an instance of the implementation.
+
+servant_to_reference(rvr) generates CORBA reference for the servant (implementation).
+
+narrow(ref) type-casts the object reference.
+
+resolve_initial_references("NameService") gets the reference of the Naming Service.
+
+narrow(objRef) type-casts the Naming Service reference.
+
+to_name("Reverse") converts the string name to NameComponent.
+
+rebind(path, h_ref) binds the servant object with the name 'Reverse' in Naming Service.
+
+orb.run() waits for client requests.
+
+ReverseImpl.java
+
+Extends ReversePOA (generated skeleton class).
+
+Constructor prints "Reverse Object Created".
+
+reverse_string(String name):
+
+Creates a StringBuffer from input name.
+
+Reverses the buffer.
+
+Returns "Server Send " followed by reversed string.
+
+ReverseClient.java
+
+Line 1-5: Import CORBA classes.
+
+main():
+
+Initializes ORB.
+
+Gets Naming Service reference.
+
+Narrows it.
+
+Resolves the name "Reverse".
+
+Takes string input from the user.
+
+Calls the reverse_string method from server.
+
+Displays the reversed string received from server.
+
+Expected Output
+
+Server Side:
+
+Reverse Object Created
+Step1
+Step2
+Step3
+Step4
+Reverse Server reading and waiting....
+
+Client Side:
+
+Enter String=
+Hello
+The Reversed String is :
+Server Send olleH
+
+How Operations are Done on Two Machines?
+
+Server machine runs ReverseServer to register the object.
+
+Client machine runs ReverseClient, connects to the server through Naming Service.
+
+Client sends string -> Server reverses it -> Server sends it back.
+
+Both client and server interact via the CORBA ORB and Naming Service even if they are on different computers.
+
+Summary:
+
+CORBA allows distributed communication.
+
+Naming Service acts like a "directory" for server objects.
+
+The client finds the server object using the Naming Service and performs remote method invocation.
+
+This project demonstrates distributed object brokering.
